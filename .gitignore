@@ -1,0 +1,22 @@
+# Environments & Secrets
+.env
+.env.*
+venv/
+env/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Folder Operasional (Foto Unduhan GDrive)
+temp_processing/
+*.jpg
+*.jpeg
+*.png
+
+# Konfigurasi IDE / OS
+.vscode/
+.DS_Store
+Thumbs.db
