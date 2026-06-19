@@ -1,6 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
-title AI Run Gallery - Enterprise Setup & Launcher
+title AI Run Gallery - Enterprise Setup
 color 0A
 
 echo =======================================================
@@ -12,7 +12,7 @@ echo.
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo [!] FATAL: Python tidak terdeteksi di sistem ini.
-    echo Silakan install Python 3.10+ dan pastikan "Add to PATH" dicentang saat instalasi.
+    echo Silakan install Python 3.10+ dan pastikan Add to PATH dicentang saat instalasi.
     pause
     exit /b
 )
@@ -22,23 +22,21 @@ echo [*] Memindai spesifikasi perangkat keras...
 set HAS_NVIDIA=0
 for /f "skip=1 delims=" %%i in ('wmic path win32_VideoController get name 2^>nul') do (
     echo %%i | findstr /i "NVIDIA" >nul
-    if !errorlevel! equ 0 (
-        set HAS_NVIDIA=1
-    )
+    if !errorlevel! equ 0 set HAS_NVIDIA=1
 )
 
 if !HAS_NVIDIA! equ 1 (
-    echo [*] STATUS HARDWARE: NVIDIA GPU Terdeteksi! 
-    echo [*] STRATEGI: Mode High-End ^(CUDA Accelerated^) disiapkan.
+    echo [*] STATUS HARDWARE: NVIDIA GPU Terdeteksi
+    echo [*] STRATEGI: Mode High-End CUDA disiapkan.
 ) else (
-    echo [*] STATUS HARDWARE: GPU NVIDIA tidak ditemukan. 
-    echo [*] STRATEGI: Mode Low-End ^(CPU Murni^) disiapkan.
+    echo [*] STATUS HARDWARE: GPU NVIDIA tidak ditemukan.
+    echo [*] STRATEGI: Mode Low-End CPU Murni disiapkan.
 )
 echo.
 
 :: 3. SETUP VIRTUAL ENVIRONMENT (BRANKAS ISOLASI)
 if not exist "venv" (
-    echo [*] Membangun brankas isolasi (Virtual Environment)...
+    echo [*] Membangun brankas isolasi Virtual Environment...
     python -m venv venv
 )
 
@@ -46,15 +44,15 @@ if not exist "venv" (
 echo [*] Mengaktifkan lingkungan virtual...
 call venv\Scripts\activate
 
-echo [*] Memasang pustaka dasar (Core Dependencies)...
+echo [*] Memasang pustaka dasar...
 python -m pip install --upgrade pip >nul
-pip install -r requirements.txt | findstr /V "Requirement already satisfied"
+pip install -r requirements.txt
 
 echo [*] Menyuntikkan Mesin AI Adaptif...
 if !HAS_NVIDIA! equ 1 (
-    pip install onnxruntime-gpu | findstr /V "Requirement already satisfied"
+    pip install onnxruntime-gpu
 ) else (
-    pip install onnxruntime | findstr /V "Requirement already satisfied"
+    pip install onnxruntime
 )
 
 echo.
